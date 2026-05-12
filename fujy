@@ -1,99 +1,15 @@
 [ "$_fujy_loaded" ] && return 0
 _fujy_loaded=1
 
-_fujy_usage()
-{
-    cat - <<'EOF'
-usage: flyjssh <target>
-
-Open a Fly environment inside a Juju unit via juju ssh.
-
-<target> can be:
-  - a unit name      e.g. ubuntu/0, mysql/1
-  - leader syntax    e.g. ubuntu/leader
-  - a machine ID     e.g. 0
-EOF
+[ "$_hivecore_loaded" ] || {
+    echo "fujy: hivecore plugin not loaded — run: fly add f-atwi/hivecore" >&2
+    return 1
 }
 
-_fujy_prepare()
-{
-    : "${FLY_HOME:=$HOME}"
-    : "${FLY_TMPDIR:=/tmp}"
-    : "${FLY_TARZ:=-z}"
-    : "${_fly_lib:=$FLY_HOME/.fly.d/.fly.lib}"
-    : "${_fly_uuid:=$(cat "$FLY_HOME/.fly.d/.flyuuid" 2>/dev/null || uuidgen)}"
-
-    command -v juju >/dev/null 2>&1 || {
-        echo "fujy: juju command not found" >&2
-        return 1
-    }
-    type _fly_pkg_warp >/dev/null 2>&1 || {
-        echo "fujy: load Fly first (. ~/.fly.d/fly source)" >&2
-        return 1
-    }
-
-    _fly_tmpdir="$FLY_TMPDIR/.fly.$(id -u)/$_fly_uuid"
-    _fly_tarz="$FLY_TARZ"
-}
-
-_fujy_stage()
-{
-    typeset target stage_cmd
-
-    target="$1"
-    stage_cmd="$(_fly_xpretar);$(_fly_xpackage)"
-    _fly_package | juju ssh "$target" "/bin/sh -c '$stage_cmd'"
-}
-
-_fujy_attach()
-{
-    typeset target attach_cmd
-
-    target="$1"
-    attach_cmd="export USER=\$(id -un); export _fujy_juju_cwd=/var/lib/juju; FLY_HOME=$_fly_tmpdir; . \"$_fly_tmpdir/.fly.d/.fly.lib/.loginshell\""
-    juju ssh "$target" "/bin/sh -c '$attach_cmd'"
-}
-
-_fujy_run()
-{
-    typeset target
-
-    target="$1"
-    shift
-    [ "$target" ] || {
-        _fujy_usage >&2
-        return 1
-    }
-
-    _fujy_prepare || return $?
-
-    _fujy_stage "$target" || return $?
-    _fujy_attach "$target"
-}
-
-flyjssh()
-{
-    _fujy_run "$@"
-}
-
-fjssh()
-{
-    flyjssh "$@"
-}
-
-flyjsshb()
-{
-    _fly_destshell=bash flyjssh "$@"
-}
-
-flyjsshz()
-{
-    _fly_destshell=zsh flyjssh "$@"
-}
-
-flyjsshk()
-{
-    _fly_destshell=ksh flyjssh "$@"
-}
+flyjssh()  { _fly_transport_run juju "$@"; }
+fjssh()    { flyjssh "$@"; }
+flyjsshb() { _fly_destshell=bash flyjssh "$@"; }
+flyjsshz() { _fly_destshell=zsh  flyjssh "$@"; }
+flyjsshk() { _fly_destshell=ksh  flyjssh "$@"; }
 
 [ "$_fujy_juju_cwd" ] && \cd "$_fujy_juju_cwd" 2>/dev/null && unset _fujy_juju_cwd
