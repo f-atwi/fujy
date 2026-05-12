@@ -18,4 +18,4 @@ _fujy_completion()
     COMPREPLY=($(compgen -W "$units" -- "$cur"))
 }
 
-complete -F _fujy_completion flyjssh fjssh flyjsshb flyjsshz flyjsshk
+complete -F _fujy_completion flyjujushell fjujushell flyjujubash fjujubash flyjujuzsh fjujuzsh flyjujuksh fjujuksh

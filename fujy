@@ -3,10 +3,13 @@ _fujy_loaded=1
 
 [ "$_hivecore_loaded" ] || { _hive_core="${FLY_HOME:-$HOME}/.fly.d/plugins/hive-core/hive-core"; [ -f "$_hive_core" ] && . "$_hive_core" || { echo "fujy: hive-core plugin not installed — run: fly add f-atwi/hive-core" >&2; return 1; }; unset _hive_core; }
 
-flyjssh()  { _fly_transport_run juju "$@"; }
-fjssh()    { flyjssh "$@"; }
-flyjsshb() { _fly_destshell=bash flyjssh "$@"; }
-flyjsshz() { _fly_destshell=zsh  flyjssh "$@"; }
-flyjsshk() { _fly_destshell=ksh  flyjssh "$@"; }
+flyjujushell() { _fly_transport_run juju "$@"; }
+fjujushell()  { flyjujushell "$@"; }
+flyjujubash() { _fly_destshell=bash flyjujushell "$@"; }
+fjujubash()   { flyjujubash "$@"; }
+flyjujuzsh()  { _fly_destshell=zsh  flyjujushell "$@"; }
+fjujuzsh()    { flyjujuzsh "$@"; }
+flyjujuksh()  { _fly_destshell=ksh  flyjujushell "$@"; }
+fjujuksh()    { flyjujuksh "$@"; }
 
 [ "$_fujy_juju_cwd" ] && \cd "$_fujy_juju_cwd" 2>/dev/null && unset _fujy_juju_cwd
