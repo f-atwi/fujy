@@ -1,7 +1,7 @@
 [ "$_fujy_loaded" ] && return 0
 _fujy_loaded=1
 
-[ "$_hivecore_loaded" ] || { _hive_core="${FLY_HOME:-$HOME}/.fly.d/plugins/hive-core/hive-core"; [ -f "$_hive_core" ] && . "$_hive_core" || { echo "fujy: hive-core plugin not installed — run: fly add f-atwi/hive-core" >&2; return 1; }; unset _hive_core; }
+[ "$_flugcore_loaded" ] || { _flug_core="${FLY_HOME:-$HOME}/.fly.d/plugins/flug-core/flug-core"; [ -f "$_flug_core" ] && . "$_flug_core" || { echo "fujy: flug-core plugin not installed — run: fly add f-atwi/flug-core" >&2; return 1; }; unset _flug_core; }
 
 flyjujushell() { _fly_transport_run juju "$@"; }
 fjujushell()  { flyjujushell "$@"; }
