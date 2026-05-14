@@ -5,11 +5,11 @@ _fujy_loaded=1
 
 flyjujushell() { _fly_transport_run juju "$@"; }
 fjujushell()  { flyjujushell "$@"; }
-flyjujubash() { _fly_destshell=bash flyjujushell "$@"; }
-fjujubash()   { flyjujubash "$@"; }
-flyjujuzsh()  { _fly_destshell=zsh  flyjujushell "$@"; }
-fjujuzsh()    { flyjujuzsh "$@"; }
-flyjujuksh()  { _fly_destshell=ksh  flyjujushell "$@"; }
-fjujuksh()    { flyjujuksh "$@"; }
+flyjujushellb() { _fly_destshell=bash flyjujushell "$@"; }
+fjujushellb()   { flyjujushellb "$@"; }
+flyjujushellz()  { _fly_destshell=zsh  flyjujushell "$@"; }
+fjujushellz()    { flyjujushellz "$@"; }
+flyjujushellk()  { _fly_destshell=ksh  flyjujushell "$@"; }
+fjujushellk()    { flyjujushellk "$@"; }
 
 [ "$_fujy_juju_cwd" ] && \cd "$_fujy_juju_cwd" 2>/dev/null && unset _fujy_juju_cwd
